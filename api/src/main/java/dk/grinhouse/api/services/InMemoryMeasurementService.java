@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-@Component
 public class InMemoryMeasurementService implements IMeasurementService
 {
   private ArrayList<Measurement> savedMeasurements;
 
   public InMemoryMeasurementService()
   {
+    savedMeasurements = new ArrayList<Measurement>();
     fillMeasurements();
   }
 
