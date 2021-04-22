@@ -1,30 +1,30 @@
 package dk.grinhouse.api.controllers;
 
-import dk.grinhouse.api.services.IMeasurementService;
-import models.Measurement;
+import dk.grinhouse.core.service.MeasurementService;
+import dk.grinhouse.core.shared.model.Measurement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class MeasurementController
 {
-  private final IMeasurementService measurementService;
+  private final MeasurementService measurementService;
 
-  public MeasurementController(IMeasurementService measurementService)
+  public MeasurementController(MeasurementService measurementService)
   {
     this.measurementService = measurementService;
   }
 
   @GetMapping("/measurements")
   @ResponseBody
-  public ResponseEntity<ArrayList<Measurement>> getLatestMeasurements()
+  public ResponseEntity<List<Measurement>> getLatestMeasurements()
   {
-    var measurements = measurementService.getLatestMeasurements();
+    var measurements = measurementService.getAllMeasurement();
     return ResponseEntity.created(URI.create("http://localhost:8080/measurements")).body(measurements);
   }
 }
