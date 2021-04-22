@@ -25,7 +25,6 @@ public class MeasurementController
   public ResponseEntity<ArrayList<Measurement>> getLatestMeasurements()
   {
     var measurements = measurementService.getLatestMeasurements();
-    System.out.println(measurements);
     return ResponseEntity.created(URI.create("http://localhost:8080/measurements")).body(measurements);
   }
 }
