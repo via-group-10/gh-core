@@ -1,4 +1,4 @@
-package dk.grinhouse.persistence.shared.model;
+package dk.grinhouse.core.shared.model;
 
 public enum MeasurementTypeEnum
 {
