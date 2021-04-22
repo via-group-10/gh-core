@@ -26,11 +26,17 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-<<<<<<< HEAD
-            <version>9.2.1.jre11</version>
-=======
             <version>9.2.0.jre11</version>
->>>>>>> 3e86aaa71fdc57da12ed0dd13df017672682a2ac
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
