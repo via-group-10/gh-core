@@ -24,7 +24,7 @@ public class MeasurementController
   @ResponseBody
   public ResponseEntity<List<Measurement>> getLatestMeasurements()
   {
-    var measurements = measurementService.getLatestTemperatureMeasurement();
+    var measurements = measurementService.getAllMeasurement();
     return ResponseEntity.created(URI.create("http://localhost:8080/measurements")).body(measurements);
   }
 }
