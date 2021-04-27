@@ -35,4 +35,28 @@ public class MeasurementController
     var measurements = measurementService.getLatestMeasurements();
     return ResponseEntity.ok(measurements);
   }
+
+  @GetMapping("/api/measurement/temperature")
+  @ResponseBody
+  public ResponseEntity<List<Measurement>> getTemperatureMeasurements()
+  {
+    var measurements = measurementService.getTemperatureMeasurements();
+    return ResponseEntity.ok(measurements);
+  }
+
+  @GetMapping("/api/measurement/humidity")
+  @ResponseBody
+  public ResponseEntity<List<Measurement>> getHumidityMeasurements()
+  {
+    var measurements = measurementService.getHumidityMeasurements();
+    return ResponseEntity.ok(measurements);
+  }
+
+  @GetMapping("/api/measurement/carbon-dioxide")
+  @ResponseBody
+  public ResponseEntity<List<Measurement>> getCarbonDioxideMeasurements()
+  {
+    var measurements = measurementService.getCarbonDioxideMeasurements();
+    return ResponseEntity.ok(measurements);
+  }
 }

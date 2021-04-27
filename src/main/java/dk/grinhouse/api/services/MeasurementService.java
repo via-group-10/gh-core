@@ -1,5 +1,6 @@
 package dk.grinhouse.api.services;
 
+import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
 import dk.grinhouse.models.Measurement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,4 +34,18 @@ public class MeasurementService
 		return measurementRepository.getLatestMeasurements();
 	}
 
+	public List<Measurement> getTemperatureMeasurements()
+	{
+		return measurementRepository.findByMeasurementTypeEnum(MeasurementTypeEnum.temperature);
+	}
+
+	public List<Measurement> getHumidityMeasurements()
+	{
+		return measurementRepository.findByMeasurementTypeEnum(MeasurementTypeEnum.humidity);
+	}
+
+	public List<Measurement> getCarbonDioxideMeasurements()
+	{
+		return measurementRepository.findByMeasurementTypeEnum(MeasurementTypeEnum.carbonDioxide);
+	}
 }
