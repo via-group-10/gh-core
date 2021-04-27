@@ -23,13 +23,14 @@ public class MeasurementService
 		measurementRepository.saveAll(measurements);
 	}
 
-	public List<Measurement> getAllMeasurement()
+	public List<Measurement> getAllMeasurements()
 	{
 		return measurementRepository.findAll();
 	}
 
-	public List<Measurement> getLatestTemperatureMeasurement(){
-		return measurementRepository.getLatestTemperatureMeasurement();
+	public List<Measurement> getLatestMeasurements()
+	{
+		return measurementRepository.getLatestMeasurements();
 	}
 
 }

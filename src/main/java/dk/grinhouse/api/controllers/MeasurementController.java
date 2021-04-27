@@ -20,11 +20,19 @@ public class MeasurementController
     this.measurementService = measurementService;
   }
 
-  @GetMapping("/measurements")
+  @GetMapping("/api/measurements")
+  @ResponseBody
+  public ResponseEntity<List<Measurement>> getAllMeasurements()
+  {
+    var measurements = measurementService.getAllMeasurements();
+    return ResponseEntity.created(URI.create("http://localhost:8080/measurements")).body(measurements);
+  }
+
+  @GetMapping("/api/measurements/latest")
   @ResponseBody
   public ResponseEntity<List<Measurement>> getLatestMeasurements()
   {
-    var measurements = measurementService.getLatestTemperatureMeasurement();
+    var measurements = measurementService.getLatestMeasurements();
     return ResponseEntity.created(URI.create("http://localhost:8080/measurements")).body(measurements);
   }
 }
