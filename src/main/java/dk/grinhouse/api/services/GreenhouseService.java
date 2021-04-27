@@ -1,5 +1,7 @@
 package dk.grinhouse.api.services;
 
+import dk.grinhouse.api.exceptions.InvalidCredentialsException;
+import dk.grinhouse.models.Credentials;
 import dk.grinhouse.persistence.repositories.IGreenhouseRepository;
 import dk.grinhouse.models.Greenhouse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,17 @@ public class GreenhouseService
 		greenhouseRepository.save(greenhouse);
 	}
 
-	public void getGreenhouse()
+	public Greenhouse getGreenhouse(Credentials credentials)
 	{
-		greenhouseRepository.findAll();
+		var response = greenhouseRepository.getGreenhouse(credentials.getUsername(),credentials.getPassword());
+
+		if (response==null)
+		{
+			throw new InvalidCredentialsException();
+		}
+		else
+			{
+				return response;
+			}
 	}
 }

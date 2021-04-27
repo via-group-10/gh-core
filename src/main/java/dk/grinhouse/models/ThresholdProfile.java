@@ -68,7 +68,7 @@ public class ThresholdProfile
 		return minimumHumidity;
 	}
 
-	public float getMinumumTemperature()
+	public float getMinimumTemperature()
 	{
 		return minimumTemperature;
 	}
@@ -86,6 +86,11 @@ public class ThresholdProfile
 	public void setGreenhouseId(int greenhouseId)
 	{
 		this.greenhouseId = greenhouseId;
+	}
+
+	public boolean isActive()
+	{
+		return active;
 	}
 
 	public void setActive(boolean active)
