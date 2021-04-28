@@ -3,7 +3,7 @@ package dk.grinhouse.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "thresholdProfile", schema = "stage")
+@Table(name = "thresholdProfile", schema = "dbo")
 public class ThresholdProfile
 {
 	@Id
