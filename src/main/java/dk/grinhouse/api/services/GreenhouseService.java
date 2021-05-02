@@ -7,6 +7,9 @@ import dk.grinhouse.models.Greenhouse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class GreenhouseService
 {
@@ -26,14 +29,12 @@ public class GreenhouseService
 	public Greenhouse getGreenhouse(Credentials credentials)
 	{
 		var response = greenhouseRepository.getGreenhouse(credentials.getUsername(),credentials.getPassword());
-
 		if (response==null)
-		{
 			throw new InvalidCredentialsException();
-		}
-		else
-			{
-				return response;
-			}
+		return response;
+	}
+
+	public List<Greenhouse> getAllGreenhouses(){
+		return greenhouseRepository.findAll();
 	}
 }
