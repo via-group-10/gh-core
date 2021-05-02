@@ -3,7 +3,7 @@ use GrinHouse
 IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Greenhouse]') AND type in (N'U'))
 
 CREATE TABLE Greenhouse(
-	greenhouseId INT PRIMARY KEY NOT NULL,
+	greenhouseId INT IDENTITY PRIMARY KEY NOT NULL,
 	greenhouseName NCHAR VARYING(100) NOT NULL,
 	loginName NCHAR VARYING(100) NOT NULL,
 	loginPassword NCHAR VARYING(100) NOT NULL
@@ -73,3 +73,7 @@ CREATE TABLE Measurement(
 	FOREIGN KEY(belongsTo) REFERENCES Greenhouse(greenhouseId),
 	FOREIGN KEY(isOfType) REFERENCES MeasurementType(title)
 );
+
+INSERT INTO [GrinHouse].[dbo].[MeasurementType] values ('temperature');
+INSERT INTO [GrinHouse].[dbo].[MeasurementType] values ('humidity');
+INSERT INTO [GrinHouse].[dbo].[MeasurementType] values ('carbonDioxide');
