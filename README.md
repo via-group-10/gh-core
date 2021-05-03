@@ -37,4 +37,4 @@
 + [Swagger](http://localhost:8080/swagger.html) Localhost
 
 ---
-*No third-party contributions. This repository belgons to the fourth semster group of VIA Software Engineering Program.*
+*No third-party contributions. This repository belongs to the fourth semester group of VIA Software Engineering Program.*
