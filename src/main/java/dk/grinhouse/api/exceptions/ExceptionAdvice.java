@@ -26,6 +26,14 @@ public class ExceptionAdvice
   }
 
   @ResponseBody
+  @ExceptionHandler(InvalidProfileId.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  String InvalidProfileId(InvalidProfileId exception)
+  {
+    return exception.getMessage();
+  }
+
+  @ResponseBody
   @ExceptionHandler(CannotFindProfileID.class)
   @ResponseStatus(HttpStatus.CONFLICT)
   String CannotFindProfileID (CannotFindProfileID exception)
