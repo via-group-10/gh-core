@@ -3,7 +3,7 @@ package dk.grinhouse.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "measurementType", schema = "dbo")
+@Table(name = "MeasurementType", schema = "dbo")
 public class MeasurementType
 {
 	@Id
