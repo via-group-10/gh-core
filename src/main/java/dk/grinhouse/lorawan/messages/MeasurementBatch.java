@@ -1,4 +1,4 @@
-package dk.grinhouse.lorawan;
+package dk.grinhouse.lorawan.messages;
 
 public class MeasurementBatch
 {

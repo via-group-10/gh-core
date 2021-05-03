@@ -1,5 +1,7 @@
 package dk.grinhouse.lorawan.decoder;
 
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+
 public class MeasurementDataDecoder
 {
      /* Data sample: 001a001803bb */
@@ -40,5 +42,23 @@ public class MeasurementDataDecoder
      public byte[] getDataAsBytes()
      {
           return dataAsBytes;
+     }
+
+     public static String encodeThresholds(float minimumTemperature, float maximumTemperature, float minimumHumidity, float maximumHumidity, float minimumCarbonDioxide, float maximumCarbonDioxide)
+     {
+          byte[] data = new byte[12];
+          data[0] = (byte)(((int) minimumTemperature) >> 8);
+          data[1] = (byte)(((int) minimumTemperature));
+          data[2] = (byte)(((int) maximumTemperature) >> 8);
+          data[3] = (byte)(((int) maximumTemperature));
+          data[4] = (byte)(((int) minimumHumidity) >> 8);
+          data[5] = (byte)(((int) minimumHumidity));
+          data[6] = (byte)(((int) maximumHumidity) >> 8);
+          data[7] = (byte)(((int) maximumHumidity));
+          data[8] = (byte)(((int) minimumCarbonDioxide) >> 8);
+          data[9] = (byte)(((int) minimumCarbonDioxide));
+          data[10] = (byte)(((int) maximumCarbonDioxide) >> 8);
+          data[11] = (byte)(((int) maximumCarbonDioxide));
+          return new HexBinaryAdapter().marshal(data);
      }
 }

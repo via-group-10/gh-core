@@ -3,20 +3,25 @@ package dk.grinhouse.api.services;
 import dk.grinhouse.api.exceptions.CannotFindProfileID;
 import dk.grinhouse.api.exceptions.InvalidGreenhouseIDException;
 import dk.grinhouse.api.exceptions.InvalidProfileId;
-import dk.grinhouse.models.Greenhouse;
+
+import dk.grinhouse.events.EventType;
+import dk.grinhouse.events.GrinhouseEvent;
 import dk.grinhouse.models.ThresholdProfile;
 import dk.grinhouse.persistence.repositories.IGreenhouseRepository;
 import dk.grinhouse.persistence.repositories.IThresholdProfileRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Component
-public class ProfileService
+public class ProfileService implements ApplicationEventPublisherAware
 {
   private final IThresholdProfileRepository thresholdProfileRepository;
+  private ApplicationEventPublisher applicationEventPublisher;
   private final IGreenhouseRepository greenhouseRepository;
 
   @Autowired
@@ -52,6 +57,8 @@ public class ProfileService
 
     // save the new profile to database
     thresholdProfileRepository.save(newProfile);
+
+    applicationEventPublisher.publishEvent(new GrinhouseEvent(this, null, EventType.PROFILE_UPDATE));
   }
 
 
@@ -66,8 +73,13 @@ public class ProfileService
     if (updateProfile.isActive())
       DeactivateCurrentProfile();
 
-    try { thresholdProfileRepository.save(updateProfile); }
-    catch (Exception e) { throw new InvalidGreenhouseIDException(); }
+    try {
+      thresholdProfileRepository.save(updateProfile);
+      applicationEventPublisher.publishEvent(new GrinhouseEvent(this, null, EventType.PROFILE_UPDATE));
+    }
+    catch (Exception e) {
+      throw new InvalidGreenhouseIDException();
+    }
   }
 
   private void DeactivateCurrentProfile()
@@ -83,5 +95,11 @@ public class ProfileService
   {
     try { thresholdProfileRepository.deleteById(id); }
     catch (Exception e) { throw new CannotFindProfileID(); }
+  }
+
+  @Override
+  public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+  {
+    this.applicationEventPublisher = applicationEventPublisher;
   }
 }

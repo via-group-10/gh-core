@@ -1,6 +1,5 @@
 package dk.grinhouse.lorawan.decoder;
 
-import dk.grinhouse.lorawan.MeasurementBatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
