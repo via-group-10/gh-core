@@ -40,4 +40,12 @@ public class ExceptionAdvice
   {
     return exception.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(WrongParameterException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  String WrongParameterException (WrongParameterException exception)
+  {
+    return exception.getMessage();
+  }
 }
