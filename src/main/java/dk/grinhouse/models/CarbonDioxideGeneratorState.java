@@ -4,12 +4,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "carbonDioxideGeneratorState", schema = "dbo")
+@Table(name = "CarbonDioxideGeneratorState", schema = "dbo")
 public class CarbonDioxideGeneratorState
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "carbonDioxideGeneratorStateId")
+	@Column(name = "carbonDioxideGeneratorId")
 	private int carbonDioxideGeneratorStateId;
 
 	@Column(name = "isCarbonDioxideGeneratorOn")
