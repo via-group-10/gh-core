@@ -1,34 +1,27 @@
 package dk.grinhouse.lorawan.gateway;
 
-import dk.grinhouse.lorawan.MeasurementBatch;
+import dk.grinhouse.events.EventType;
+import dk.grinhouse.events.GrinhouseEvent;
+import dk.grinhouse.lorawan.messages.MeasurementBatch;
 import dk.grinhouse.lorawan.decoder.MeasurementDataDecoder;
+import dk.grinhouse.lorawan.services.LorawanService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Service;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
 
-public class WebsocketClient implements WebSocket.Listener {
-     private Collection<LorawanListener> listeners;
+@Service
+public class WebsocketClient implements WebSocket.Listener, ApplicationListener<GrinhouseEvent>
+{
+     private final LorawanService lorawanService;
      private WebSocket server = null;
-
-     public void registerListener(LorawanListener listener)
-     {
-          listeners.add(listener);
-     }
-
-     public void eventTrigger(Object obj)
-     {
-          for (var listener : listeners) {
-               listener.update(obj);
-          }
-     }
-
 
      // Send down-link message to device
      // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
@@ -38,16 +31,14 @@ public class WebsocketClient implements WebSocket.Listener {
 
      // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
      // Substitute ????????????????? with the token you have been given
-     public WebsocketClient(String url) {
-          listeners = new ArrayList<>();
+     public WebsocketClient(String url, LorawanService lorawanService) {
+          this.lorawanService = lorawanService;
           HttpClient client = HttpClient.newHttpClient();
           CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
                .buildAsync(URI.create(url), this);
           System.out.println("Websocket is being initialized.");
           server = ws.join();
      }
-
-
 
      //onOpen()
      public void onOpen(WebSocket webSocket) {
@@ -68,6 +59,7 @@ public class WebsocketClient implements WebSocket.Listener {
           System.out.println("Status:" + statusCode + " Reason: " + reason);
           return CompletableFuture.completedFuture("onClose() completed.").thenAccept(System.out::println);
      }
+
      //onPing()
      public CompletionStage<?> onPing(WebSocket webSocket, ByteBuffer message) {
           webSocket.request(1);
@@ -75,6 +67,7 @@ public class WebsocketClient implements WebSocket.Listener {
           System.out.println(message.asCharBuffer());
           return CompletableFuture.completedFuture("Ping completed.").thenAccept(System.out::println);
      }
+
      //onPong()
      public CompletionStage<?> onPong(WebSocket webSocket, ByteBuffer message) {
           webSocket.request(1);
@@ -82,6 +75,7 @@ public class WebsocketClient implements WebSocket.Listener {
           System.out.println(message.asCharBuffer());
           return CompletableFuture.completedFuture("Pong completed.").thenAccept(System.out::println);
      }
+
      //onText()
      public CompletionStage<?> onText(WebSocket webSocket, CharSequence messageData, boolean last)
      {
@@ -107,7 +101,7 @@ public class WebsocketClient implements WebSocket.Listener {
                     String data = socketData.getString("data");
                     MeasurementDataDecoder decoder = new MeasurementDataDecoder(data);
                     MeasurementBatch batch = new MeasurementBatch(decoder.getDataAsBytes());
-                    eventTrigger(batch);
+                    lorawanService.addNewMeasurementBatch(batch);
                }
           }
           catch (JSONException e) {
@@ -117,5 +111,26 @@ public class WebsocketClient implements WebSocket.Listener {
           System.out.println("#################");
           webSocket.request(1);
           return CompletableFuture.completedFuture("onText() completed.").thenAccept(System.out::println);
+     }
+
+     @Override
+     public void onApplicationEvent(GrinhouseEvent event)
+     {
+          if (event.getType() == EventType.SEND_DOWNLINK_PROFILE)
+          {
+               sendDownLinkProfile((JSONObject) event.getArgument());
+          }
+     }
+
+     private void sendDownLinkProfile(JSONObject profile)
+     {
+          try {
+               System.out.println("Sending to loriot server...");
+               var telegram = profile.toString(4);
+               sendDownLink(telegram);
+          }
+          catch (JSONException e) {
+               e.printStackTrace();
+          }
      }
 }

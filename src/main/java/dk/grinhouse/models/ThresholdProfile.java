@@ -1,6 +1,7 @@
 package dk.grinhouse.models;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 @Entity
 @Table(name = "ThresholdProfile", schema = "dbo")

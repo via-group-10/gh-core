@@ -1,36 +1,66 @@
 package dk.grinhouse.lorawan.services;
 
-import dk.grinhouse.lorawan.MeasurementBatch;
-import dk.grinhouse.lorawan.gateway.LorawanListener;
+import dk.grinhouse.events.EventType;
+import dk.grinhouse.events.GrinhouseEvent;
+import dk.grinhouse.lorawan.decoder.MeasurementDataDecoder;
+import dk.grinhouse.lorawan.messages.DownlinkMessage;
+import dk.grinhouse.lorawan.messages.MeasurementBatch;
 import dk.grinhouse.models.Measurement;
 import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
+import dk.grinhouse.persistence.repositories.IThresholdProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Service
-public class LorawanService implements LorawanListener
+public class LorawanService implements ApplicationListener<GrinhouseEvent>,
+     ApplicationEventPublisherAware
 {
-     private IMeasurementRepository measurementRepository;
+     private final IMeasurementRepository measurementRepository;
+     private final IThresholdProfileRepository thresholdProfileRepository;
+     private ApplicationEventPublisher applicationEventPublisher;
+     private final String EUI;
 
      @Autowired
-     public LorawanService(IMeasurementRepository measurementRepository)
+     public LorawanService(IMeasurementRepository measurementRepository, IThresholdProfileRepository thresholdProfileRepository, String EUI)
      {
           this.measurementRepository = measurementRepository;
+          this.thresholdProfileRepository = thresholdProfileRepository;
+          this.EUI = EUI;
      }
 
+
      @Override
-     public void update(Object obj)
+     public void onApplicationEvent(GrinhouseEvent event)
      {
-          if (obj instanceof MeasurementBatch) {
-               newMeasurementBatch((MeasurementBatch) obj);
+          if (event.getType() == EventType.PROFILE_UPDATE)
+          {
+               notifyUpdatedProfile();
           }
      }
 
-     private void newMeasurementBatch(MeasurementBatch batch)
+     private void notifyUpdatedProfile()
+     {
+          var activeProfile = thresholdProfileRepository.findByActive(true);
+
+          String hexaThresholds = MeasurementDataDecoder.encodeThresholds(
+               activeProfile.getMinimumTemperature(),activeProfile.getMaximumTemperature(),
+               activeProfile.getMinimumHumidity(), activeProfile.getMaximumHumidity(),
+               activeProfile.getMinimumCarbonDioxide(), activeProfile.getMaximumCarbonDioxide());
+
+          DownlinkMessage dm = new DownlinkMessage(EUI, 3, hexaThresholds);
+
+          applicationEventPublisher.publishEvent(
+               new GrinhouseEvent(this, dm.getJson(), EventType.SEND_DOWNLINK_PROFILE));
+     }
+
+     public void addNewMeasurementBatch(MeasurementBatch batch)
      {
           System.out.println("Temperature: " + batch.getTemperature());
           System.out.println("Humidity: " + batch.getHumidity());
@@ -73,5 +103,11 @@ public class LorawanService implements LorawanListener
           tempMeasurement.setMeasurementTypeEnum(MeasurementTypeEnum.temperature);
           tempMeasurement.setMeasurementValue(batch.getTemperature());
           return tempMeasurement;
+     }
+
+     @Override
+     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+     {
+          this.applicationEventPublisher = applicationEventPublisher;
      }
 }
