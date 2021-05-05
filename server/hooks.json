@@ -23,7 +23,7 @@
           "match":
           {
             "type": "value",
-            "value": "refs/heads/docker",
+            "value": "refs/heads/mainline-release",
             "parameter":
             {
               "source": "payload",
