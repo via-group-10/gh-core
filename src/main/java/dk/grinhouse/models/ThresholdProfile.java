@@ -11,7 +11,7 @@ public class ThresholdProfile
 	@Column(name = "thresholdProfileId")
 	private int thresholdProfileId;
 
-	@Column(name = "profileName", columnDefinition = "nvarchar")
+	@Column(name = "profileName", columnDefinition = "nvarchar(100)")
 	private String profileName;
 
 	@Column(name = "active")

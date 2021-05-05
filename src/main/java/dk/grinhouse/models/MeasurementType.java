@@ -8,7 +8,7 @@ public class MeasurementType
 {
 	@Id
 	@Enumerated(EnumType.STRING)
-	@Column(name = "title", columnDefinition = "nvarchar")
+	@Column(name = "title", columnDefinition = "nvarchar(100)")
 	private MeasurementTypeEnum title;
 
 	public MeasurementTypeEnum getTitle()
