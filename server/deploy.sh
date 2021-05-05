@@ -1,7 +1,7 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 echo 'pulling new changes'
-git checkout docker
+git checkout mainline-release
 git pull
 echo 'stopping containers'
 docker-compose stop
