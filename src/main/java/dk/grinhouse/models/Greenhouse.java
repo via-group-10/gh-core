@@ -12,13 +12,13 @@ public class Greenhouse
 	@Column(name = "greenhouseId")
 	private int greenhouseId;
 
-	@Column(name = "greenhouseName", columnDefinition = "nvarchar")
+	@Column(name = "greenhouseName", columnDefinition = "nvarchar(100)")
 	private String greenhouseName;
 
-	@Column(name = "loginName", columnDefinition = "nvarchar")
+	@Column(name = "loginName", columnDefinition = "nvarchar(100)")
 	private String loginName;
 
-	@Column(name = "loginPassword", columnDefinition = "nvarchar")
+	@Column(name = "loginPassword", columnDefinition = "nvarchar(100)")
 	private String loginPassword;
 
 	public Greenhouse()

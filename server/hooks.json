@@ -1,0 +1,42 @@
+[
+  {
+    "id": "deploy-from-git",
+    "execute-command": "/opt/gh-core/server/deploy.sh",
+    "command-working-directory": "/opt/gh-core/server",
+    "trigger-rule":
+    {
+      "and":
+      [
+        {
+          "match":
+          {
+            "type": "payload-hash-sha1",
+            "secret": "peanut",
+            "parameter":
+            {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "refs/heads/docker",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "ref"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "hello-world",
+    "execute-command": "/opt/gh-core/server/test.sh",
+    "command-working-directory": "/opt/gh-core/server"
+  }
+]

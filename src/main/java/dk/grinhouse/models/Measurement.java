@@ -21,7 +21,7 @@ public class Measurement
 	@Column(name = "belongsTo")
 	private int greenhouseId;
 
-	@Column(name = "isOfType", columnDefinition = "nvarchar")
+	@Column(name = "isOfType", columnDefinition = "nvarchar(100)")
 	@Enumerated(EnumType.STRING)
 	private MeasurementTypeEnum measurementTypeEnum;
 
