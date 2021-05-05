@@ -28,14 +28,14 @@ public class GreenhouseController
     return greenhouseService.getGreenhouse(credentials);
   }
 
-  @Operation(summary = "[debug only] allows you to create a greenhouse", description = "greenhouse can be created using this endpoint for debug purposes")
+  @Operation(summary = "[debug only] | allows you to create a greenhouse", description = "greenhouse can be created using this endpoint for debug purposes")
   @PutMapping("/api/greenhouse")
   public void create(@RequestBody Greenhouse greenhouse)
   {
     greenhouseService.createGreenhouse(greenhouse);
   }
 
-  @Operation(summary = "[debug only] get list of all the greenhouses in the database", description = "returns a list of all greenhouses")
+  @Operation(summary = "[debug only] | get list of all the greenhouses in the database", description = "returns a list of all greenhouses")
   @GetMapping("/api/greenhouse")
   public List<Greenhouse> getAll()
   {
