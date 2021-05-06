@@ -2,9 +2,10 @@ package dk.grinhouse.lorawan.services;
 
 import dk.grinhouse.events.EventType;
 import dk.grinhouse.events.GrinhouseEvent;
-import dk.grinhouse.lorawan.decoder.MeasurementDataDecoder;
+import dk.grinhouse.lorawan.decoder.DataEncoder;
 import dk.grinhouse.lorawan.messages.DownlinkMessage;
 import dk.grinhouse.lorawan.messages.MeasurementBatch;
+import dk.grinhouse.lorawan.messages.UplinkMessage;
 import dk.grinhouse.models.Measurement;
 import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
@@ -49,19 +50,19 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
      {
           var activeProfile = thresholdProfileRepository.findByActive(true);
 
-          String hexaThresholds = MeasurementDataDecoder.encodeThresholds(
-               activeProfile.getMinimumTemperature(),activeProfile.getMaximumTemperature(),
-               activeProfile.getMinimumHumidity(), activeProfile.getMaximumHumidity(),
-               activeProfile.getMinimumCarbonDioxide(), activeProfile.getMaximumCarbonDioxide());
+          String hexThresholds = DataEncoder.bytesToHex(activeProfile.getThresholdsInBytes());
 
-          DownlinkMessage dm = new DownlinkMessage(EUI, 3, hexaThresholds);
+          DownlinkMessage dm = new DownlinkMessage(EUI, 1, hexThresholds);
 
           applicationEventPublisher.publishEvent(
-               new GrinhouseEvent(this, dm.getJson(), EventType.SEND_DOWNLINK_PROFILE));
+               new GrinhouseEvent(this, dm, EventType.SEND_DOWNLINK_PROFILE));
      }
 
-     public void addNewMeasurementBatch(MeasurementBatch batch)
+     public void addNewMeasurementBatch(String data)
      {
+//          MeasurementDataDecoder decoder = new MeasurementDataDecoder(data);
+          MeasurementBatch batch = new MeasurementBatch(DataEncoder.hexToBytes(data));
+
           System.out.println("Temperature: " + batch.getTemperature());
           System.out.println("Humidity: " + batch.getHumidity());
           System.out.println("Carbon Dioxide: " + batch.getCarbonDioxideLevel());
@@ -103,6 +104,14 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
           tempMeasurement.setMeasurementTypeEnum(MeasurementTypeEnum.temperature);
           tempMeasurement.setMeasurementValue(batch.getTemperature());
           return tempMeasurement;
+     }
+
+     public void handleUplinkMessage(UplinkMessage uplinkMessage)
+     {
+          if (uplinkMessage.getCmd().equals("rx")) {
+               String data = uplinkMessage.getData();
+               addNewMeasurementBatch(data);
+          }
      }
 
      @Override

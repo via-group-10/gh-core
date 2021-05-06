@@ -1,12 +1,11 @@
 package dk.grinhouse.lorawan.gateway;
 
+import com.google.gson.Gson;
 import dk.grinhouse.events.EventType;
 import dk.grinhouse.events.GrinhouseEvent;
-import dk.grinhouse.lorawan.messages.MeasurementBatch;
-import dk.grinhouse.lorawan.decoder.MeasurementDataDecoder;
+import dk.grinhouse.lorawan.messages.DownlinkMessage;
+import dk.grinhouse.lorawan.messages.UplinkMessage;
 import dk.grinhouse.lorawan.services.LorawanService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,7 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
 {
      private final LorawanService lorawanService;
      private WebSocket server = null;
+     private final Gson jsonConverter;
 
      // Send down-link message to device
      // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
@@ -31,8 +31,9 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
 
      // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
      // Substitute ????????????????? with the token you have been given
-     public WebsocketClient(String url, LorawanService lorawanService) {
+     public WebsocketClient(String url, Gson gson, LorawanService lorawanService) {
           this.lorawanService = lorawanService;
+          this.jsonConverter = gson;
           HttpClient client = HttpClient.newHttpClient();
           CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
                .buildAsync(URI.create(url), this);
@@ -53,6 +54,7 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
           System.out.println("Message: " + error.getLocalizedMessage());
           webSocket.abort();
      }
+
      //onClose()
      public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
           System.out.println("WebSocket closed!");
@@ -79,35 +81,17 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
      //onText()
      public CompletionStage<?> onText(WebSocket webSocket, CharSequence messageData, boolean last)
      {
-          JSONObject socketData = null;
-          String indented = null;
-          try {
-               socketData = new JSONObject(messageData.toString());
-               indented = socketData.toString(4);
-          }
-          catch (JSONException e) {
-               e.printStackTrace();
-               onError(webSocket, e);
-          }
-          if (socketData == null || indented == null)
+          UplinkMessage uplinkMessage = jsonConverter.fromJson(messageData.toString(), UplinkMessage.class);
+          if (uplinkMessage == null)
           {
                return CompletableFuture.completedFuture("onText() with no data.").thenAccept(System.out::println);
           }
           System.out.println("#################");
           System.out.println("MESSAGE");
-          System.out.println(indented);
-          try {
-               if (socketData.getString("cmd").equals("rx")) {
-                    String data = socketData.getString("data");
-                    MeasurementDataDecoder decoder = new MeasurementDataDecoder(data);
-                    MeasurementBatch batch = new MeasurementBatch(decoder.getDataAsBytes());
-                    lorawanService.addNewMeasurementBatch(batch);
-               }
-          }
-          catch (JSONException e) {
-               e.printStackTrace();
-               onError(webSocket, e);
-          }
+          System.out.println(jsonConverter.toJson(uplinkMessage));
+
+          lorawanService.handleUplinkMessage(uplinkMessage);
+
           System.out.println("#################");
           webSocket.request(1);
           return CompletableFuture.completedFuture("onText() completed.").thenAccept(System.out::println);
@@ -118,19 +102,13 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
      {
           if (event.getType() == EventType.SEND_DOWNLINK_PROFILE)
           {
-               sendDownLinkProfile((JSONObject) event.getArgument());
+               sendDownLinkProfile((DownlinkMessage) event.getArgument());
           }
      }
 
-     private void sendDownLinkProfile(JSONObject profile)
+     private void sendDownLinkProfile(DownlinkMessage profile)
      {
-          try {
-               System.out.println("Sending to loriot server...");
-               var telegram = profile.toString(4);
-               sendDownLink(telegram);
-          }
-          catch (JSONException e) {
-               e.printStackTrace();
-          }
+          String telegram = jsonConverter.toJson(profile);
+          sendDownLink(telegram);
      }
 }
