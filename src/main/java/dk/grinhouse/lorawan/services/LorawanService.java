@@ -2,7 +2,7 @@ package dk.grinhouse.lorawan.services;
 
 import dk.grinhouse.events.EventType;
 import dk.grinhouse.events.GrinhouseEvent;
-import dk.grinhouse.lorawan.decoder.MeasurementDataDecoder;
+import dk.grinhouse.lorawan.decoder.DataEncoder;
 import dk.grinhouse.lorawan.messages.DownlinkMessage;
 import dk.grinhouse.lorawan.messages.MeasurementBatch;
 import dk.grinhouse.lorawan.messages.UplinkMessage;
@@ -50,12 +50,9 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
      {
           var activeProfile = thresholdProfileRepository.findByActive(true);
 
-          String hexaThresholds = MeasurementDataDecoder.encodeThresholds(
-               activeProfile.getMinimumTemperature(),activeProfile.getMaximumTemperature(),
-               activeProfile.getMinimumHumidity(), activeProfile.getMaximumHumidity(),
-               activeProfile.getMinimumCarbonDioxide(), activeProfile.getMaximumCarbonDioxide());
+          String hexThresholds = DataEncoder.bytesToHex(activeProfile.getThresholdsInBytes());
 
-          DownlinkMessage dm = new DownlinkMessage(EUI, 3, hexaThresholds);
+          DownlinkMessage dm = new DownlinkMessage(EUI, 3, hexThresholds);
 
           applicationEventPublisher.publishEvent(
                new GrinhouseEvent(this, dm, EventType.SEND_DOWNLINK_PROFILE));
@@ -63,8 +60,8 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
 
      public void addNewMeasurementBatch(String data)
      {
-          MeasurementDataDecoder decoder = new MeasurementDataDecoder(data);
-          MeasurementBatch batch = new MeasurementBatch(decoder.getDataAsBytes());
+//          MeasurementDataDecoder decoder = new MeasurementDataDecoder(data);
+          MeasurementBatch batch = new MeasurementBatch(DataEncoder.hexToBytes(data));
 
           System.out.println("Temperature: " + batch.getTemperature());
           System.out.println("Humidity: " + batch.getHumidity());
