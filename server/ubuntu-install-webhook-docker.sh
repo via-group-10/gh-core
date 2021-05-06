@@ -1,5 +1,6 @@
-#!/bin/sh
-
-apt install curl
+#!/bin/bash
+sudo su
+apt update
+apt install curl webhook
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
