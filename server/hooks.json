@@ -1,0 +1,42 @@
+[
+  {
+    "id": "deploy-from-git",
+    "execute-command": "/opt/springy/deploy.sh",
+    "command-working-directory": "/opt/springy",
+    "trigger-rule":
+    {
+      "and":
+      [
+        {
+          "match":
+          {
+            "type": "payload-hash-sha1",
+            "secret": "peanut",
+            "parameter":
+            {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "refs/heads/main",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "ref"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "hello-world",
+    "execute-command": "/opt/springy/test.sh",
+    "command-working-directory": "/opt/springy"
+  }
+]
