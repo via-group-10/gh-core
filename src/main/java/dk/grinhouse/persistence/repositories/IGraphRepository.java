@@ -11,7 +11,7 @@ import java.util.List;
 public interface IGraphRepository extends JpaRepository<Measurement, Integer>
 {
   //Get daily temperature
-  @Query(value = "SELECT * FROM [GrinHouse].[dbo].[Measurement] WHERE CONVERT(DATE,[measurementDateTime]) = CONVERT(DATE,GETDATE()) and [isOfType] = 'temperature' ORDER BY [measurementDateTime] DESC ", nativeQuery = true)
+  @Query(value = "SELECT * FROM [GrinHouse].[dbo].[Measurement] WHERE [measurementDateTime] < CURRENT_TIMESTAMP and [measurementDateTime] > DATEADD(HOUR,-24,CURRENT_TIMESTAMP) and [isOfType] = 'temperature' ORDER BY [measurementDateTime] DESC ", nativeQuery = true)
   List<Measurement> getDailyTemperatureMeasurements();
   //Get weekly temperature
   @Query(value = "SELECT [measurementId], [measuredValue], [measurementDateTime], [belongsTo], [isOfType] FROM ( SELECT [measurementId], [measuredValue], [measurementDateTime], [belongsTo], [isOfType], ROW_NUMBER() OVER (ORDER BY [measurementId]) AS rownum FROM [GrinHouse].[dbo].[Measurement] ) AS t WHERE t.rownum % 16 = 0 and convert(DATE, [measurementDateTime]) > getdate() - 6 and convert(DATE, [measurementDateTime]) <= getdate() and [isOfType] = 'temperature' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
@@ -21,7 +21,7 @@ public interface IGraphRepository extends JpaRepository<Measurement, Integer>
   List<Measurement> getMonthlyTemperatureeasurements();
 
   //Get daily humidity
-  @Query(value = "SELECT * FROM [GrinHouse].[dbo].[Measurement] WHERE CONVERT(DATE,[measurementDateTime]) = CONVERT(DATE,GETDATE()) and [isOfType] = 'humidity' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
+  @Query(value = "SELECT * FROM [GrinHouse].[dbo].[Measurement] WHERE [measurementDateTime] < CURRENT_TIMESTAMP and [measurementDateTime] > DATEADD(HOUR,-24,CURRENT_TIMESTAMP) and [isOfType] = 'humidity' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
   List<Measurement> getDailyHumidityMeasurements();
   //Get weekly temperature
   @Query(value = "SELECT [measurementId], [measuredValue], [measurementDateTime], [belongsTo], [isOfType] FROM ( SELECT [measurementId], [measuredValue], [measurementDateTime], [belongsTo], [isOfType], ROW_NUMBER() OVER (ORDER BY [measurementId]) AS rownum FROM [GrinHouse].[dbo].[Measurement] ) AS t WHERE t.rownum % 16 = 0 and convert(DATE, [measurementDateTime]) > getdate() - 6 and convert(DATE, [measurementDateTime]) <= getdate() and [isOfType] = 'humidity' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
@@ -31,7 +31,7 @@ public interface IGraphRepository extends JpaRepository<Measurement, Integer>
   List<Measurement> getMonthlyHumidityMeasurements();
 
   //Get daily carbon dioxide
-  @Query(value = "SELECT * FROM [GrinHouse].[dbo].[Measurement] WHERE CONVERT(DATE,[measurementDateTime]) = CONVERT(DATE,GETDATE()) and [isOfType] = 'carbonDioxide' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
+  @Query(value = "SELECT * FROM [GrinHouse].[dbo].[Measurement] WHERE [measurementDateTime] < CURRENT_TIMESTAMP and [measurementDateTime] > DATEADD(HOUR,-24,CURRENT_TIMESTAMP) and [isOfType] = 'carbonDioxide' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
   List<Measurement> getDailyCarbonDioxideMeasurements();
   //Get weekly temperature
   @Query(value = "SELECT [measurementId], [measuredValue], [measurementDateTime], [belongsTo], [isOfType] FROM ( SELECT [measurementId], [measuredValue], [measurementDateTime], [belongsTo], [isOfType], ROW_NUMBER() OVER (ORDER BY [measurementId]) AS rownum FROM [GrinHouse].[dbo].[Measurement] ) AS t WHERE t.rownum % 16 = 0 and convert(DATE, [measurementDateTime]) > getdate() - 6 and convert(DATE, [measurementDateTime]) <= getdate() and [isOfType] = 'carbonDioxide' ORDER BY [measurementDateTime] DESC", nativeQuery = true)
