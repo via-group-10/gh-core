@@ -13,8 +13,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
 
@@ -56,6 +54,7 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
           System.out.println("Message: " + error.getLocalizedMessage());
           webSocket.abort();
      }
+
      //onClose()
      public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
           System.out.println("WebSocket closed!");

@@ -52,7 +52,7 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
 
           String hexThresholds = DataEncoder.bytesToHex(activeProfile.getThresholdsInBytes());
 
-          DownlinkMessage dm = new DownlinkMessage(EUI, 3, hexThresholds);
+          DownlinkMessage dm = new DownlinkMessage(EUI, 1, hexThresholds);
 
           applicationEventPublisher.publishEvent(
                new GrinhouseEvent(this, dm, EventType.SEND_DOWNLINK_PROFILE));
