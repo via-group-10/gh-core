@@ -21,7 +21,7 @@ public class GreenhouseController
     this.greenhouseService = greenhouseService;
   }
 
-  @Operation(summary = "login, provide credentials to get greenhouse information", description = "returns information about greenhouse such as id and name")
+  @Operation(summary = "login | provide credentials to get greenhouse information", description = "returns information about greenhouse such as id and name")
   @PostMapping("/api/greenhouse")
   public Greenhouse login(@RequestBody Credentials credentials)
   {
