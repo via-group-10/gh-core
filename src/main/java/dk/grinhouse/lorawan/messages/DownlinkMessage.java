@@ -1,9 +1,5 @@
 package dk.grinhouse.lorawan.messages;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
 public class DownlinkMessage
 {
      private String cmd;
@@ -61,15 +57,5 @@ public class DownlinkMessage
      public void setData(String data)
      {
           this.data = data;
-     }
-
-     public JSONObject getJson()
-     {
-          HashMap<String, Object> downlinkMsg = new HashMap<>();
-          downlinkMsg.put("cmd", cmd);
-          downlinkMsg.put("EUI", EUI);
-          downlinkMsg.put("port", port);
-          downlinkMsg.put("data", data);
-          return new JSONObject(downlinkMsg);
      }
 }
