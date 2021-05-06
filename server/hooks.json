@@ -1,8 +1,8 @@
 [
   {
     "id": "deploy-from-git",
-    "execute-command": "/opt/gh-core/deploy.sh",
-    "command-working-directory": "/opt/gh-core",
+    "execute-command": "/opt/gh-core/server/deploy.sh",
+    "command-working-directory": "/opt/gh-core/server",
     "trigger-rule":
     {
       "and":
@@ -36,7 +36,7 @@
   },
   {
     "id": "hello-world",
-    "execute-command": "/opt/gh-core/test.sh",
-    "command-working-directory": "/opt/gh-core"
+    "execute-command": "/opt/gh-core/server/test.sh",
+    "command-working-directory": "/opt/gh-core/server"
   }
 ]
