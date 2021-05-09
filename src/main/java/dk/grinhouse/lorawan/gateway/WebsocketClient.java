@@ -17,7 +17,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class WebsocketClient implements WebSocket.Listener, ApplicationListener<GrinhouseEvent>
+public class WebsocketClient implements WebSocket.Listener
 {
      private final LorawanService lorawanService;
      private WebSocket server = null;
@@ -89,21 +89,16 @@ public class WebsocketClient implements WebSocket.Listener, ApplicationListener<
           System.out.println("#################");
           System.out.println("MESSAGE");
           System.out.println(jsonConverter.toJson(uplinkMessage));
+          System.out.println("#################");
 
           lorawanService.handleUplinkMessage(uplinkMessage);
 
-          System.out.println("#################");
+          var dm = lorawanService.getDownlinkMessageCache();
+          if (dm != null)
+               sendDownLinkProfile(dm);
+
           webSocket.request(1);
           return CompletableFuture.completedFuture("onText() completed.").thenAccept(System.out::println);
-     }
-
-     @Override
-     public void onApplicationEvent(GrinhouseEvent event)
-     {
-          if (event.getType() == EventType.SEND_DOWNLINK_PROFILE)
-          {
-               sendDownLinkProfile((DownlinkMessage) event.getArgument());
-          }
      }
 
      private void sendDownLinkProfile(DownlinkMessage profile)
