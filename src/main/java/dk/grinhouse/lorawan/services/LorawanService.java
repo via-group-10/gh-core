@@ -11,8 +11,6 @@ import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
 import dk.grinhouse.persistence.repositories.IThresholdProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +18,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Service
-public class LorawanService implements ApplicationListener<GrinhouseEvent>,
-     ApplicationEventPublisherAware
+public class LorawanService implements ApplicationListener<GrinhouseEvent>
 {
      private final IMeasurementRepository measurementRepository;
      private final IThresholdProfileRepository thresholdProfileRepository;
-     private ApplicationEventPublisher applicationEventPublisher;
      private final String EUI;
+     private DownlinkMessage downlinkMessageCache;
 
      @Autowired
      public LorawanService(IMeasurementRepository measurementRepository, IThresholdProfileRepository thresholdProfileRepository, String EUI)
@@ -42,20 +39,22 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
      {
           if (event.getType() == EventType.PROFILE_UPDATE)
           {
-               notifyUpdatedProfile();
+               activeProfileUpdated();
           }
      }
 
-     private void notifyUpdatedProfile()
+     public DownlinkMessage getDownlinkMessageCache()
+     {
+          return downlinkMessageCache;
+     }
+
+     private void activeProfileUpdated()
      {
           var activeProfile = thresholdProfileRepository.findByActive(true);
 
           String hexThresholds = DataEncoder.bytesToHex(activeProfile.getThresholdsInBytes());
 
-          DownlinkMessage dm = new DownlinkMessage(EUI, 1, hexThresholds);
-
-          applicationEventPublisher.publishEvent(
-               new GrinhouseEvent(this, dm, EventType.SEND_DOWNLINK_PROFILE));
+          downlinkMessageCache = new DownlinkMessage(EUI, 1, hexThresholds);
      }
 
      public void addNewMeasurementBatch(String data)
@@ -112,11 +111,5 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
                String data = uplinkMessage.getData();
                addNewMeasurementBatch(data);
           }
-     }
-
-     @Override
-     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-     {
-          this.applicationEventPublisher = applicationEventPublisher;
      }
 }
