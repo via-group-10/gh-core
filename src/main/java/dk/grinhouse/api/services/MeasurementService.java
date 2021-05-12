@@ -1,5 +1,6 @@
 package dk.grinhouse.api.services;
 
+import dk.grinhouse.api.exceptions.NoMeasurementsInDateRangeException;
 import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
 import dk.grinhouse.models.Measurement;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Component
@@ -47,5 +49,41 @@ public class MeasurementService
 	public List<Measurement> getCarbonDioxideMeasurements()
 	{
 		return measurementRepository.findByMeasurementTypeEnum(MeasurementTypeEnum.carbonDioxide);
+	}
+
+	public List<Measurement> getTemperatureWithinDate(Timestamp from, Timestamp to)
+	{
+		List<Measurement> measurements = measurementRepository.getTemperatureWithinDate(from.toString(), to.toString());
+
+		if(measurements.isEmpty())
+		{
+			throw new NoMeasurementsInDateRangeException();
+		}
+
+		return measurements;
+	}
+
+	public List<Measurement> getHumidityWithinDate(Timestamp from, Timestamp to)
+	{
+		List<Measurement> measurements = measurementRepository.getHumidityWithinDate(from.toString(), to.toString());
+
+		if(measurements.isEmpty())
+		{
+			throw new NoMeasurementsInDateRangeException();
+		}
+
+		return measurements;
+	}
+
+	public List<Measurement> getCarbonDioxideWithinDate(Timestamp from, Timestamp to)
+	{
+		List<Measurement> measurements = measurementRepository.getCarbonDioxideWithinDate(from.toString(), to.toString());
+
+		if(measurements.isEmpty())
+		{
+			throw new NoMeasurementsInDateRangeException();
+		}
+
+		return measurements;
 	}
 }
