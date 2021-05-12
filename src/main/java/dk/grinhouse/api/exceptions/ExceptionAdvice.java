@@ -48,4 +48,12 @@ public class ExceptionAdvice
   {
     return exception.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(NoMeasurementsInDateRangeException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  String WrongParameterException (NoMeasurementsInDateRangeException exception)
+  {
+    return exception.getMessage();
+  }
 }
