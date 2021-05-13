@@ -20,6 +20,6 @@ public class OpenApiConfig {
         .components(new Components())
         .info(new Info().title("GrinHouse Application API")
         .description("This is a RESTful service to be used by the Grinhouse android app.")
-        .version("2.0.0"));
+        .version("2.2.0"));
   }
 }
