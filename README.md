@@ -3,7 +3,7 @@
 
 *Grinhouse core application including the api, database and the gateway.*
 
-### Cloude Hosting
+### Cloud Hosting
 http://20.52.3.144:8080/
 
 
