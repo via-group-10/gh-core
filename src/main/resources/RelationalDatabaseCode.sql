@@ -77,3 +77,5 @@ CREATE TABLE Measurement(
 INSERT INTO [GrinHouse].[dbo].[MeasurementType] values ('temperature');
 INSERT INTO [GrinHouse].[dbo].[MeasurementType] values ('humidity');
 INSERT INTO [GrinHouse].[dbo].[MeasurementType] values ('carbonDioxide');
+
+insert into [GrinHouse].[dbo].[Greenhouse] values ('my greeen', 'user', 'pass')

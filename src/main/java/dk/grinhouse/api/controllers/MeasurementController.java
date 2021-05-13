@@ -7,8 +7,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -49,6 +52,16 @@ public class MeasurementController
     return ResponseEntity.ok(measurements);
   }
 
+  @Operation(summary = "get all temperature measurements within date", description = "")
+  @GetMapping("/api/measurement/temperature/range")
+  @ResponseBody
+  public List<Measurement> getTemperatureMeasurementsBetweenDates(@RequestParam
+      Timestamp from, @RequestParam Timestamp to)
+  {
+    var measurements = measurementService.getTemperatureWithinDate(from, to);
+    return measurements;
+  }
+
   @Operation(summary = "get all humidity measurements", description = "")
   @GetMapping("/api/measurement/humidity")
   @ResponseBody
@@ -58,6 +71,16 @@ public class MeasurementController
     return ResponseEntity.ok(measurements);
   }
 
+  @Operation(summary = "get all humidity measurements within range", description = "")
+  @GetMapping("/api/measurement/humidity/range")
+  @ResponseBody
+  public List<Measurement> getHumidityMeasurementsBetweenDates(@RequestParam
+      Timestamp from, @RequestParam Timestamp to)
+  {
+    var measurements = measurementService.getHumidityWithinDate(from, to);
+    return measurements;
+  }
+
   @Operation(summary = "get all carbon dioxide measurements", description = "")
   @GetMapping("/api/measurement/carbon-dioxide")
   @ResponseBody
@@ -65,5 +88,15 @@ public class MeasurementController
   {
     var measurements = measurementService.getCarbonDioxideMeasurements();
     return ResponseEntity.ok(measurements);
+  }
+
+  @Operation(summary = "get all carbon dioxide measurements within range", description = "")
+  @GetMapping("/api/measurement/carbon-dioxide/range")
+  @ResponseBody
+  public List<Measurement> getCarbonDioxideMeasurementsBetweenDates(@RequestParam
+      Timestamp from, @RequestParam Timestamp to)
+  {
+    var measurements = measurementService.getCarbonDioxideWithinDate(from, to);
+    return measurements;
   }
 }

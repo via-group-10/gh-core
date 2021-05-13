@@ -2,16 +2,15 @@ package dk.grinhouse.lorawan.services;
 
 import dk.grinhouse.events.EventType;
 import dk.grinhouse.events.GrinhouseEvent;
-import dk.grinhouse.lorawan.decoder.MeasurementDataDecoder;
+import dk.grinhouse.lorawan.decoder.DataEncoder;
 import dk.grinhouse.lorawan.messages.DownlinkMessage;
 import dk.grinhouse.lorawan.messages.MeasurementBatch;
+import dk.grinhouse.lorawan.messages.UplinkMessage;
 import dk.grinhouse.models.Measurement;
 import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
 import dk.grinhouse.persistence.repositories.IThresholdProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +18,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Service
-public class LorawanService implements ApplicationListener<GrinhouseEvent>,
-     ApplicationEventPublisherAware
+public class LorawanService implements ApplicationListener<GrinhouseEvent>
 {
      private final IMeasurementRepository measurementRepository;
      private final IThresholdProfileRepository thresholdProfileRepository;
-     private ApplicationEventPublisher applicationEventPublisher;
      private final String EUI;
+     private DownlinkMessage downlinkMessageCache;
 
      @Autowired
      public LorawanService(IMeasurementRepository measurementRepository, IThresholdProfileRepository thresholdProfileRepository, String EUI)
@@ -41,27 +39,29 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
      {
           if (event.getType() == EventType.PROFILE_UPDATE)
           {
-               notifyUpdatedProfile();
+               activeProfileUpdated();
           }
      }
 
-     private void notifyUpdatedProfile()
+     public DownlinkMessage getDownlinkMessageCache()
+     {
+          return downlinkMessageCache;
+     }
+
+     private void activeProfileUpdated()
      {
           var activeProfile = thresholdProfileRepository.findByActive(true);
 
-          String hexaThresholds = MeasurementDataDecoder.encodeThresholds(
-               activeProfile.getMinimumTemperature(),activeProfile.getMaximumTemperature(),
-               activeProfile.getMinimumHumidity(), activeProfile.getMaximumHumidity(),
-               activeProfile.getMinimumCarbonDioxide(), activeProfile.getMaximumCarbonDioxide());
+          String hexThresholds = DataEncoder.bytesToHex(activeProfile.getThresholdsInBytes());
 
-          DownlinkMessage dm = new DownlinkMessage(EUI, 3, hexaThresholds);
-
-          applicationEventPublisher.publishEvent(
-               new GrinhouseEvent(this, dm.getJson(), EventType.SEND_DOWNLINK_PROFILE));
+          downlinkMessageCache = new DownlinkMessage(EUI, 1, hexThresholds);
      }
 
-     public void addNewMeasurementBatch(MeasurementBatch batch)
+     public void addNewMeasurementBatch(String data)
      {
+//          MeasurementDataDecoder decoder = new MeasurementDataDecoder(data);
+          MeasurementBatch batch = new MeasurementBatch(DataEncoder.hexToBytes(data));
+
           System.out.println("Temperature: " + batch.getTemperature());
           System.out.println("Humidity: " + batch.getHumidity());
           System.out.println("Carbon Dioxide: " + batch.getCarbonDioxideLevel());
@@ -105,9 +105,11 @@ public class LorawanService implements ApplicationListener<GrinhouseEvent>,
           return tempMeasurement;
      }
 
-     @Override
-     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+     public void handleUplinkMessage(UplinkMessage uplinkMessage)
      {
-          this.applicationEventPublisher = applicationEventPublisher;
+          if (uplinkMessage.getCmd().equals("rx")) {
+               String data = uplinkMessage.getData();
+               addNewMeasurementBatch(data);
+          }
      }
 }

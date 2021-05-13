@@ -1,15 +1,14 @@
 package dk.grinhouse.lorawan.messages;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
 public class DownlinkMessage
 {
-     private String cmd;
+     private String cmd = "tx";
      private String EUI;
      private int port;
      private String data;
+     private boolean confirmed = true;
+     private String success = "Message enqueued";
+     private String error = "Message not enqueued";
 
      public DownlinkMessage()
      {
@@ -17,7 +16,6 @@ public class DownlinkMessage
 
      public DownlinkMessage(String EUI, int port, String data)
      {
-          this.cmd = "tx";
           this.EUI = EUI;
           this.port = port;
           this.data = data;
@@ -63,13 +61,34 @@ public class DownlinkMessage
           this.data = data;
      }
 
-     public JSONObject getJson()
+     public String getError()
      {
-          HashMap<String, Object> downlinkMsg = new HashMap<>();
-          downlinkMsg.put("cmd", cmd);
-          downlinkMsg.put("EUI", EUI);
-          downlinkMsg.put("port", port);
-          downlinkMsg.put("data", data);
-          return new JSONObject(downlinkMsg);
+          return error;
      }
+
+     public void setError(String error)
+     {
+          this.error = error;
+     }
+
+     public String getSuccess()
+     {
+          return success;
+     }
+
+     public void setSuccess(String success)
+     {
+          this.success = success;
+     }
+
+     public boolean isConfirmed()
+     {
+          return confirmed;
+     }
+
+     public void setConfirmed(boolean confirmed)
+     {
+          this.confirmed = confirmed;
+     }
+
 }
