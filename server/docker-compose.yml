@@ -1,20 +1,8 @@
 version: "3"
 services:
-  sql:
-    image: "mcr.microsoft.com/mssql/server"
-    container_name: sql
-    user: root
-    network_mode: "host"
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Enterprise
-      - SA_PASSWORD=Password1
-    command: /bin/bash -c "(/opt/mssql/bin/sqlservr &) | tee >(grep -q 'Service Broker manager has started' && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password1 -d master -Q 'CREATE DATABASE [GrinHouse]' && sleep infinity)"
   app:
     container_name: gh-core
     image: gh-core
     build: ./
     restart: always
     network_mode: "host"
-    depends_on:
-      - sql
