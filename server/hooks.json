@@ -38,5 +38,10 @@
     "id": "hello-world",
     "execute-command": "/opt/gh-core/server/test.sh",
     "command-working-directory": "/opt/gh-core/server"
+  },
+  {
+    "id": "redeploy",
+    "execute-command": "/opt/gh-core/server/deploy.sh",
+    "command-working-directory": "/opt/gh-core/server"
   }
 ]
