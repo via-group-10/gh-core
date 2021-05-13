@@ -4,8 +4,8 @@
 *Grinhouse core application including the api, database and the gateway.*
 
 ### Use cloud hosted api
-http://20.52.3.144:8080/
-http://20.52.3.144:8080/swagger.html
++ http://20.52.3.144:8080/
++ http://20.52.3.144:8080/swagger.html
 
 ### Connect to Cloud Database
 you can also connect to the database directly using Microsoft SQL Server Management Studio
