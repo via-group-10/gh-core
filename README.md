@@ -9,7 +9,7 @@
 
 ### Connect to Cloud Database
 you can also connect to the database directly using Microsoft SQL Server Management Studio
-+ [Google Drive](https://drive.google.com/file/d/1fBK1qh_zmlgKUbNietT2qXqCEFv9RlsU/view?usp=sharing) login here
++ [Google Drive](https://drive.google.com/file/d/1vjITBV0ZFGTMP29ZF4AxSNAN1K9QxWCp/view?usp=sharing) login here
 
 ### Installation, run gh-core locally
 1. Open with [`IntelliJ IDEA`](https://www.jetbrains.com/idea/download/)
