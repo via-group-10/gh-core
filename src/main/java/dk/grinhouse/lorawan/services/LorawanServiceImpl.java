@@ -1,11 +1,8 @@
 package dk.grinhouse.lorawan.services;
 
-import dk.grinhouse.events.EventType;
-import dk.grinhouse.events.GrinhouseEvent;
+import dk.grinhouse.events.*;
 import dk.grinhouse.lorawan.decoder.DataEncoder;
-import dk.grinhouse.lorawan.messages.DownlinkMessage;
-import dk.grinhouse.lorawan.messages.MeasurementBatch;
-import dk.grinhouse.lorawan.messages.UplinkMessage;
+import dk.grinhouse.lorawan.messages.*;
 import dk.grinhouse.models.*;
 import dk.grinhouse.persistence.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +10,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Service
 public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, LorawanService
@@ -61,7 +57,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           if (uplinkMessage.getCmd().equals("rx")) {
                String data = uplinkMessage.getData();
-               addNewMeasurementBatch(data);
+               long timestamp = uplinkMessage.getTs();
+               addNewMeasurementBatch(data, timestamp);
           }
      }
 
@@ -74,9 +71,9 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
           downlinkMessageCache = new DownlinkMessage(EUI, 1, hexThresholds);
      }
 
-     public void addNewMeasurementBatch(String data)
+     public void addNewMeasurementBatch(String data, long timestamp)
      {
-          MeasurementBatch batch = new MeasurementBatch(DataEncoder.hexToBytes(data));
+          MeasurementBatch batch = new MeasurementBatch(DataEncoder.hexToBytes(data), timestamp);
 
           System.out.println("Temperature: " + batch.getTemperature());
           System.out.println("Humidity: " + batch.getHumidity());
@@ -102,7 +99,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           HumidifierState humState = new HumidifierState();
           humState.setGreenhouseId(1);
-          humState.setStateDateTime(Timestamp.valueOf(LocalDateTime.now()));
+          long ts = batch.getTimestamp();
+          humState.setStateDateTime(new Timestamp(ts));
 
           int humStateInInt = batch.getHumState();
 
@@ -129,7 +127,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           CarbonDioxideGeneratorState co2GenState = new CarbonDioxideGeneratorState();
           co2GenState.setGreenhouseId(1);
-          co2GenState.setStateDateTime(Timestamp.valueOf(LocalDateTime.now()));
+          long ts = batch.getTimestamp();
+          co2GenState.setStateDateTime(new Timestamp(ts));
 
           int co2GenStateInInt = batch.getCo2GenState();
 
@@ -148,7 +147,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           ACState acState = new ACState();
           acState.setGreenhouseId(1);
-          acState.setStateDateTime(Timestamp.valueOf(LocalDateTime.now()));
+          long ts = batch.getTimestamp();
+          acState.setStateDateTime(new Timestamp(ts));
 
           int acStateInInt = batch.getAcState();
 
@@ -175,7 +175,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           Measurement humidity = new Measurement();
           humidity.setGreenhouseId(1);
-          humidity.setMeasurementDateTime(Timestamp.valueOf(LocalDateTime.now()));
+          long ts = batch.getTimestamp();
+          humidity.setMeasurementDateTime(new Timestamp(ts));
           humidity.setMeasurementTypeEnum(MeasurementTypeEnum.humidity);
           humidity.setMeasurementValue(batch.getHumidity());
           return humidity;
@@ -185,7 +186,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           Measurement co2level = new Measurement();
           co2level.setGreenhouseId(1);
-          co2level.setMeasurementDateTime(Timestamp.valueOf(LocalDateTime.now()));
+          long ts = batch.getTimestamp();
+          co2level.setMeasurementDateTime(new Timestamp(ts));
           co2level.setMeasurementTypeEnum(MeasurementTypeEnum.carbonDioxide);
           co2level.setMeasurementValue(batch.getCarbonDioxideLevel());
           return co2level;
@@ -195,7 +197,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      {
           Measurement tempMeasurement = new Measurement();
           tempMeasurement.setGreenhouseId(1);
-          tempMeasurement.setMeasurementDateTime(Timestamp.valueOf(LocalDateTime.now()));
+          long ts = batch.getTimestamp();
+          tempMeasurement.setMeasurementDateTime(new Timestamp(ts));
           tempMeasurement.setMeasurementTypeEnum(MeasurementTypeEnum.temperature);
           tempMeasurement.setMeasurementValue(batch.getTemperature());
           return tempMeasurement;
