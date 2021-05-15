@@ -3,21 +3,23 @@
 
 *Grinhouse core application including the api, database and the gateway.*
 
-### Cloud Hosting
-http://20.52.3.144:8080/
+### Use cloud hosted api
++ http://20.52.3.144:8080/
++ http://20.52.3.144:8080/swagger.html
 
+### Connect to Cloud Database
+you can also connect to the database directly using Microsoft SQL Server Management Studio
++ [Google Drive](https://drive.google.com/file/d/1vjITBV0ZFGTMP29ZF4AxSNAN1K9QxWCp/view?usp=sharing) login here
 
-### Installation
-
-
+### Installation, run gh-core locally
 1. Open with [`IntelliJ IDEA`](https://www.jetbrains.com/idea/download/)
     + `git clone https://github.com/via-group-10/gh-core.git`
     + `right click > open as IntelliJ IDEA`
+    + that's all if you want to use the shared database. 
 
-2. Install Microsoft SQL server. 
+2.  
 	+ follow the guide in the guides and cheatsheets tab
-
-3. Run the new `initiation sql` binary from Resources tab. 
+	+ change the application.properties to localhost
 
 ### Guides and Cheatsheets
 
