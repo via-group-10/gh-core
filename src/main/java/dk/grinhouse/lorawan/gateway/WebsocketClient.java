@@ -1,12 +1,9 @@
 package dk.grinhouse.lorawan.gateway;
 
 import com.google.gson.Gson;
-import dk.grinhouse.events.EventType;
-import dk.grinhouse.events.GrinhouseEvent;
 import dk.grinhouse.lorawan.messages.DownlinkMessage;
 import dk.grinhouse.lorawan.messages.UplinkMessage;
 import dk.grinhouse.lorawan.services.LorawanService;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -23,14 +20,6 @@ public class WebsocketClient implements WebSocket.Listener
      private WebSocket server = null;
      private final Gson jsonConverter;
 
-     // Send down-link message to device
-     // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
-     public void sendDownLink(String jsonTelegram) {
-          server.sendText(jsonTelegram,true);
-     }
-
-     // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
-     // Substitute ????????????????? with the token you have been given
      public WebsocketClient(String url, Gson gson, LorawanService lorawanService) {
           this.lorawanService = lorawanService;
           this.jsonConverter = gson;
@@ -39,6 +28,12 @@ public class WebsocketClient implements WebSocket.Listener
                .buildAsync(URI.create(url), this);
           System.out.println("Websocket is being initialized.");
           server = ws.join();
+     }
+
+     // Send down-link message to device
+     // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
+     public void sendDownLink(String jsonTelegram) {
+          server.sendText(jsonTelegram,true);
      }
 
      //onOpen()
