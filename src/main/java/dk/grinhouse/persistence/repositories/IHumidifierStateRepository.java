@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface IHumidifierStateRepository extends JpaRepository<HumidifierState, Integer>
 {
      @Query(value = "select humidifierId, isHumidifierOn, isDehumidifierOn, stateDateTime = max(stateDateTime), logs from GrinHouse.stage.HumidifierState group by humidifierId, isHumidifierOn, isDehumidifierOn, logs", nativeQuery = true)
-     ACState getLatestHumidifierState();
+     HumidifierState getLatestHumidifierState();
 }
