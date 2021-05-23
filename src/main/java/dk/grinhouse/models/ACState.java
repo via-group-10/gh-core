@@ -24,6 +24,16 @@ public class ACState
 	@Column(name = "logs")
 	private int greenhouseId;
 
+	public boolean isHeaterOn()
+	{
+		return isHeaterOn;
+	}
+
+	public boolean isCoolerOn()
+	{
+		return isCoolerOn;
+	}
+
 	public int getGreenhouseId()
 	{
 		return greenhouseId;
