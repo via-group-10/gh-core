@@ -63,4 +63,14 @@ public class HumidifierState
 	{
 		isHumidifierOn = humidifierOn;
 	}
+
+	public boolean isHumidifierOn()
+	{
+		return isHumidifierOn;
+	}
+
+	public boolean isDehumidifierOn()
+	{
+		return isDehumidifierOn;
+	}
 }

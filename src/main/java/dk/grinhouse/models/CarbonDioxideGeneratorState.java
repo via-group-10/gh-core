@@ -21,6 +21,21 @@ public class CarbonDioxideGeneratorState
 	@Column(name = "logs")
 	private int greenhouseId;
 
+	public void setCarbonDioxideGeneratorStateId(int carbonDioxideGeneratorStateId)
+	{
+		this.carbonDioxideGeneratorStateId = carbonDioxideGeneratorStateId;
+	}
+
+	public int getCarbonDioxideGeneratorStateId()
+	{
+		return carbonDioxideGeneratorStateId;
+	}
+
+	public boolean isCarbonDioxideGeneratorOn()
+	{
+		return isCarbonDioxideGeneratorOn;
+	}
+
 	public Timestamp getStateDateTime()
 	{
 		return stateDateTime;
