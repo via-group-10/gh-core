@@ -1,9 +1,11 @@
 package dk.grinhouse.api.controllers;
 
+import dk.grinhouse.api.OpenApiConfig;
 import dk.grinhouse.api.exceptions.WrongParameterException;
 import dk.grinhouse.api.services.GraphService;
 import dk.grinhouse.models.Measurement;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@Tag(name = OpenApiConfig.TAG_GRAPH_CONTROLLER)
 public class GraphController
 {
   private final GraphService graphService;

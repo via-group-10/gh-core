@@ -12,6 +12,8 @@ public class OpenApiConfig {
   public static final String TAG_PROFILE_CONTROLLER = "Threshold Profiles";
   public static final String TAG_GREENHOUSE_CONTROLLER = "Greenhouses";
   public static final String TAG_MEASUREMENT_CONTROLLER = "Measurements";
+  public static final String TAG_GRAPH_CONTROLLER = "Graph Measurements";
+  public static final String TAG_DEVICE_STATE_CONTROLLER = "Device States";
 
 
   @Bean
