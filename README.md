@@ -8,7 +8,7 @@
 + http://20.52.3.144:8080/swagger.html
 
 ### Connect to Cloud Database
-you can also connect to the database directly using Microsoft SQL Server Management Studio
+you can also connect to the database directly using Microsoft SQL Server Management Studio  
 the following image is old, for the server name use: 20.52.3.144
 + [Google Drive](https://drive.google.com/file/d/1vjITBV0ZFGTMP29ZF4AxSNAN1K9QxWCp/view?usp=sharing) login here
 
