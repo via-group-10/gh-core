@@ -1,0 +1,16 @@
+--useful extra sql scripts
+
+--add one greenhouse
+insert into [dbo].[Greenhouse] values(1, 'jans greenhouse', 'jan', 'pass')
+
+--delete all feature rocords
+delete from [dbo].[Measurement] where convert(DATE, [measurementDateTime]) >= getdate()-1
+delete from [dbo].[ACState] where convert(DATE, [stateDateTime]) >= getdate()-1
+delete from [dbo].[HumidifierState] where convert(DATE, [stateDateTime]) >= getdate()-1
+delete from [dbo].[CarbonDioxideGeneratorState] where convert(DATE, [stateDateTime]) >= getdate()-1
+
+--delete all records
+truncate table [dbo].[Measurement]
+truncate table [dbo].[ACState]
+truncate table [dbo].[HumidifierState]
+truncate table [dbo].[CarbonDioxideGeneratorState]

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IGreenhouseRepository extends JpaRepository<Greenhouse, Integer>
 {
-  @Query(value = "SELECT * FROM GrinHouse.stage.greenhouse where loginName = :username and loginPassword = :password",nativeQuery = true)
+  @Query(value = "SELECT * FROM GrinHouse.dbo.greenhouse where loginName = :username and loginPassword = :password",nativeQuery = true)
   Greenhouse getGreenhouse(@Param("username") String username, @Param("password") String password);
 }
