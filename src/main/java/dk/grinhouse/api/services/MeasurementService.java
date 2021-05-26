@@ -5,6 +5,7 @@ import dk.grinhouse.models.MeasurementTypeEnum;
 import dk.grinhouse.persistence.repositories.IMeasurementRepository;
 import dk.grinhouse.models.Measurement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
@@ -85,5 +86,23 @@ public class MeasurementService
 		}
 
 		return measurements;
+	}
+
+	public List<Measurement> getTemperatureMeasurements(Integer amount)
+	{
+		return measurementRepository.findByMeasurementTypeEnumOrderByMeasurementDateTimeDesc(MeasurementTypeEnum.temperature,
+			PageRequest.of(0, amount));
+	}
+
+	public List<Measurement> getHumidityMeasurements(Integer amount)
+	{
+		return measurementRepository.findByMeasurementTypeEnumOrderByMeasurementDateTimeDesc(MeasurementTypeEnum.humidity,
+			PageRequest.of(0, amount));
+	}
+
+	public List<Measurement> getCarbonDioxideMeasurements(Integer amount)
+	{
+		return measurementRepository.findByMeasurementTypeEnumOrderByMeasurementDateTimeDesc(MeasurementTypeEnum.carbonDioxide,
+			PageRequest.of(0, amount));
 	}
 }
