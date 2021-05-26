@@ -65,7 +65,8 @@ public class LorawanServiceImpl implements ApplicationListener<GrinhouseEvent>, 
      private void activeProfileUpdated()
      {
           var activeProfile = thresholdProfileRepository.findByActive(true);
-
+          if (activeProfile == null)
+               return;
           String hexThresholds = DataEncoder.bytesToHex(activeProfile.getThresholdsInBytes());
 
           downlinkMessageCache = new DownlinkMessage(EUI, 1, hexThresholds);
