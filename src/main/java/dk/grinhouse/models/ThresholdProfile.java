@@ -41,6 +41,27 @@ public class ThresholdProfile
 	@Column(name = "storedIn")
 	private int greenhouseId;
 
+	public ThresholdProfile()
+	{
+	}
+
+	public ThresholdProfile(int thresholdProfileId, String profileName, boolean active,
+		float minimumTemperature, float maximumTemperature, float minimumHumidity,
+		float maximumHumidity, float minimumCarbonDioxide, float maximumCarbonDioxide,
+		int greenhouseId)
+	{
+		this.thresholdProfileId = thresholdProfileId;
+		this.profileName = profileName;
+		this.active = active;
+		this.minimumTemperature = minimumTemperature;
+		this.maximumTemperature = maximumTemperature;
+		this.minimumHumidity = minimumHumidity;
+		this.maximumHumidity = maximumHumidity;
+		this.minimumCarbonDioxide = minimumCarbonDioxide;
+		this.maximumCarbonDioxide = maximumCarbonDioxide;
+		this.greenhouseId = greenhouseId;
+	}
+
 	public int getGreenhouseId()
 	{
 		return greenhouseId;
