@@ -6,10 +6,7 @@ import dk.grinhouse.models.Measurement;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -25,15 +22,6 @@ public class MeasurementController
     this.measurementService = measurementService;
   }
 
-  @Operation(summary = "get all measurements in the database", description = "")
-  @GetMapping("/api/measurement")
-  @ResponseBody
-  public ResponseEntity<List<Measurement>> getAllMeasurements()
-  {
-    var measurements = measurementService.getAllMeasurements();
-    return ResponseEntity.ok(measurements);
-  }
-
   @Operation(summary = "returns a size three list of latest measurements one of each type", description = "")
   @GetMapping("/api/measurement/latest")
   @ResponseBody
@@ -46,9 +34,15 @@ public class MeasurementController
   @Operation(summary = "get all temperature measurements", description = "")
   @GetMapping("/api/measurement/temperature")
   @ResponseBody
-  public ResponseEntity<List<Measurement>> getTemperatureMeasurements()
+  public ResponseEntity<List<Measurement>> getTemperatureMeasurements(@RequestParam(name = "top", required = false) Integer amount)
   {
-    var measurements = measurementService.getTemperatureMeasurements();
+    List<Measurement> measurements;
+    if  (amount == null) {
+      measurements = measurementService.getTemperatureMeasurements();
+    }
+    else {
+      measurements = measurementService.getTemperatureMeasurements(amount);
+    }
     return ResponseEntity.ok(measurements);
   }
 
@@ -65,9 +59,15 @@ public class MeasurementController
   @Operation(summary = "get all humidity measurements", description = "")
   @GetMapping("/api/measurement/humidity")
   @ResponseBody
-  public ResponseEntity<List<Measurement>> getHumidityMeasurements()
+  public ResponseEntity<List<Measurement>> getHumidityMeasurements(@RequestParam(name = "top", required = false) Integer amount)
   {
-    var measurements = measurementService.getHumidityMeasurements();
+    List<Measurement> measurements;
+    if  (amount == null) {
+      measurements = measurementService.getHumidityMeasurements();
+    }
+    else {
+      measurements = measurementService.getHumidityMeasurements(amount);
+    }
     return ResponseEntity.ok(measurements);
   }
 
@@ -84,9 +84,15 @@ public class MeasurementController
   @Operation(summary = "get all carbon dioxide measurements", description = "")
   @GetMapping("/api/measurement/carbon-dioxide")
   @ResponseBody
-  public ResponseEntity<List<Measurement>> getCarbonDioxideMeasurements()
+  public ResponseEntity<List<Measurement>> getCarbonDioxideMeasurements(@RequestParam(name = "top", required = false) Integer amount)
   {
-    var measurements = measurementService.getCarbonDioxideMeasurements();
+    List<Measurement> measurements;
+    if  (amount == null) {
+      measurements = measurementService.getCarbonDioxideMeasurements();
+    }
+    else {
+      measurements = measurementService.getCarbonDioxideMeasurements(amount);
+    }
     return ResponseEntity.ok(measurements);
   }
 
