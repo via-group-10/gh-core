@@ -7,9 +7,7 @@ import dk.grinhouse.api.services.ProfileService;
 import dk.grinhouse.models.ThresholdProfile;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,9 +19,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -53,6 +49,8 @@ public class ProfileControllerTest
           profile.setActive(false);
           String jsonProfile = jsonConverter.toJson(profile);
 
+          willDoNothing().given(profileService).InsertNewProfile(profile);
+
           try {
                mvc.perform(post("/api/profile/")
                          .content(jsonProfile)
@@ -70,6 +68,8 @@ public class ProfileControllerTest
      public void givenNoProfile_postCompleteActiveProfile_returnCreated()
      {
           String jsonProfile = jsonConverter.toJson(profile);
+
+          willDoNothing().given(profileService).InsertNewProfile(profile);
 
           try {
                mvc.perform(post("/api/profile/")
@@ -90,7 +90,7 @@ public class ProfileControllerTest
           profile.setGreenhouseId(0);
           String jsonProfile = jsonConverter.toJson(profile);
 
-          willThrow(new InvalidGreenhouseIDException()).willDoNothing().given(profileService).InsertNewProfile(profile);
+          willThrow(new InvalidGreenhouseIDException()).given(profileService).InsertNewProfile(profile);
 
           try {
                mvc.perform(post("/api/profile/")
@@ -110,6 +110,8 @@ public class ProfileControllerTest
      {
           profile.setGreenhouseId(0);
           String jsonProfile = jsonConverter.toJson(profile);
+
+          willThrow(new InvalidGreenhouseIDException()).given(profileService).InsertNewProfile(profile);
 
           try {
                mvc.perform(post("/api/profile/")
