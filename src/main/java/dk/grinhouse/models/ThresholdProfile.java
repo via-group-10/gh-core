@@ -41,6 +41,27 @@ public class ThresholdProfile
 	@Column(name = "storedIn")
 	private int greenhouseId;
 
+	public ThresholdProfile()
+	{
+	}
+
+	public ThresholdProfile(int thresholdProfileId, String profileName, boolean active,
+		float minimumTemperature, float maximumTemperature, float minimumHumidity,
+		float maximumHumidity, float minimumCarbonDioxide, float maximumCarbonDioxide,
+		int greenhouseId)
+	{
+		this.thresholdProfileId = thresholdProfileId;
+		this.profileName = profileName;
+		this.active = active;
+		this.minimumTemperature = minimumTemperature;
+		this.maximumTemperature = maximumTemperature;
+		this.minimumHumidity = minimumHumidity;
+		this.maximumHumidity = maximumHumidity;
+		this.minimumCarbonDioxide = minimumCarbonDioxide;
+		this.maximumCarbonDioxide = maximumCarbonDioxide;
+		this.greenhouseId = greenhouseId;
+	}
+
 	public int getGreenhouseId()
 	{
 		return greenhouseId;
@@ -158,5 +179,64 @@ public class ThresholdProfile
 		data[10] = (byte)(((int) maximumCarbonDioxide) >> 8);
 		data[11] = (byte)(((int) maximumCarbonDioxide));
 		return data;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		ThresholdProfile that = (ThresholdProfile) o;
+
+		if (thresholdProfileId != that.thresholdProfileId)
+			return false;
+		if (active != that.active)
+			return false;
+		if (Float.compare(that.minimumTemperature, minimumTemperature) != 0)
+			return false;
+		if (Float.compare(that.maximumTemperature, maximumTemperature) != 0)
+			return false;
+		if (Float.compare(that.minimumHumidity, minimumHumidity) != 0)
+			return false;
+		if (Float.compare(that.maximumHumidity, maximumHumidity) != 0)
+			return false;
+		if (Float.compare(that.minimumCarbonDioxide, minimumCarbonDioxide) != 0)
+			return false;
+		if (Float.compare(that.maximumCarbonDioxide, maximumCarbonDioxide) != 0)
+			return false;
+		if (greenhouseId != that.greenhouseId)
+			return false;
+		return profileName != null ?
+			profileName.equals(that.profileName) :
+			that.profileName == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = thresholdProfileId;
+		result = 31 * result + (profileName != null ? profileName.hashCode() : 0);
+		result = 31 * result + (active ? 1 : 0);
+		result = 31 * result + (minimumTemperature != +0.0f ?
+			Float.floatToIntBits(minimumTemperature) :
+			0);
+		result = 31 * result + (maximumTemperature != +0.0f ?
+			Float.floatToIntBits(maximumTemperature) :
+			0);
+		result =
+			31 * result + (minimumHumidity != +0.0f ? Float.floatToIntBits(minimumHumidity) : 0);
+		result =
+			31 * result + (maximumHumidity != +0.0f ? Float.floatToIntBits(maximumHumidity) : 0);
+		result = 31 * result + (minimumCarbonDioxide != +0.0f ?
+			Float.floatToIntBits(minimumCarbonDioxide) :
+			0);
+		result = 31 * result + (maximumCarbonDioxide != +0.0f ?
+			Float.floatToIntBits(maximumCarbonDioxide) :
+			0);
+		result = 31 * result + greenhouseId;
+		return result;
 	}
 }

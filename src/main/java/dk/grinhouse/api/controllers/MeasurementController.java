@@ -28,7 +28,10 @@ public class MeasurementController
   public ResponseEntity<List<Measurement>> getLatestMeasurements()
   {
     var measurements = measurementService.getLatestMeasurements();
-    return ResponseEntity.ok(measurements);
+    if (measurements != null)
+      return ResponseEntity.ok(measurements);
+    else
+      return ResponseEntity.notFound().build();
   }
 
   @Operation(summary = "get all temperature measurements", description = "")
