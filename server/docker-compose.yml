@@ -1,8 +1,29 @@
 version: "3"
+
 services:
+  sql:
+    image: "mcr.microsoft.com/mssql/server"
+    volumes:
+      - mssql-server-linux-data:/var/opt/mssql/data
+    container_name: sql
+    user: root
+    network_mode: "host"
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Enterprise
+      - SA_PASSWORD=Grinhouse1433
+    ports:
+      - "5434:1433"
+    command: /bin/bash -c "(/opt/mssql/bin/sqlservr &) | tee >(grep -q 'Service Broker manager has started' && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Grinhouse1433 -d master -Q 'CREATE DATABASE [GrinHouse]' && sleep infinity)"
   app:
     container_name: gh-core
     image: gh-core
     build: ./
     restart: always
     network_mode: "host"
+    depends_on:
+      - sql
+
+volumes:
+  mssql-server-linux-data:
