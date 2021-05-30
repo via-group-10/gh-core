@@ -1,4 +1,4 @@
-package dk.grinhouse.api;
+package dk.grinhouse.api.controllers;
 
 import dk.grinhouse.api.controllers.MeasurementController;
 import dk.grinhouse.api.services.MeasurementService;
