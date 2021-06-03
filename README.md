@@ -39,7 +39,7 @@ the following image is old, for the server name use: 20.52.3.144
 + [ZenHub](https://app.zenhub.com/) Check your tasks here
 + [Figma](https://www.figma.com/file/OGHtk0PhJjtHhPoPK8OEhT/Greenhouse?node-id=0%3A1)  App Design
 + [Google Drive](https://drive.google.com/drive/folders/1b_Jb5Cu6ESl89s8uTb6YFx4mEng7EJx8?usp=sharing) SEP4 Folder
-+ [Webhook](http://20.52.3.144:8555/hooks/redeploy) Warning: clicking this link will stop the api, do a rebuild and start again.  
++ [Restart Cloud Services](http://20.52.3.144:8555/hooks/redeploy) Warning: clicking this link will stop the api, do a rebuild and start again.  
 + [Swagger](http://20.52.3.144:8080/swagger.html) Hosted
 + [Swagger](http://localhost:8080/swagger.html) Localhost
 
